@@ -110,11 +110,33 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 		event.SetStartAt(stTime.Local())
 		event.SetDtStampTime(time.Now())
 		event.SetEndAt(endTime.Local())
-		event.SetURL("https://timetable.nchlondon.ac.uk")
+
+		// Check is Custom 1, 2, 3 has a value
+		var urlVal string
+		if respEv.Custom1 != nil {
+			urlVal = respEv.Custom1.(string)
+		} else if respEv.Custom2 != nil {
+			urlVal = respEv.Custom2.(string)
+		} else if respEv.Custom3 != nil {
+			urlVal = respEv.Custom3.(string)
+		} else {
+			urlVal = "https://timetable.nchlondon.ac.uk/"
+		}
+
+		event.SetURL(urlVal)
 		event.SetClass("PUBLIC")
 		event.SetSequence(0)
 		event.SetSummary(respEv.Modules[0])
-		event.SetLocation("Northeastern NCH")
+
+		var loc string
+
+		if len(respEv.Sites) > 0 {
+			loc = respEv.Sites[0]
+		} else {
+			loc = "Northeastern London"
+		}
+
+		event.SetLocation(loc)
 		event.SetDescription(formattedDescription)
 	}
 
@@ -124,7 +146,6 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/octet-stream")
 	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/octet-stream")
 	w.Write(dtx)
 
 }
