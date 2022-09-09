@@ -19,7 +19,7 @@ func main() {
 	}).Methods("GET", "POST", "OPTIONS")
 
 	// Get Calendar Method
-	r.HandleFunc("/getCalendar", routers.HandleGetCalendar).Methods(http.MethodGet)
+	r.HandleFunc("/celcat/getCalendar", routers.HandleGetCalendar).Methods(http.MethodGet)
 
 	// Host & Serve the API
 
