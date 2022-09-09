@@ -107,9 +107,9 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 		formattedDescription := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(respEv.Description, "\n", ""), "<br />", "\r\n"), "\r", "")
 
 		event := cal.AddEvent(respEv.ID)
-		event.SetStartAt(stTime.Local())
+		event.SetStartAt(stTime.UTC())
 		event.SetDtStampTime(time.Now())
-		event.SetEndAt(endTime.Local())
+		event.SetEndAt(endTime.UTC())
 
 		// Check is Custom 1, 2, 3 has a value
 		var urlVal string
