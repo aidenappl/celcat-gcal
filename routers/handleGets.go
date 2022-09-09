@@ -81,6 +81,11 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if responseOb == nil || len(responseOb) == 0 {
+		http.Error(w, "no events found", http.StatusConflict)
+		return
+	}
+
 	cal := ics.NewCalendar()
 	cal.SetMethod(ics.MethodPublish)
 	cal.SetCalscale("GREGORIAN")
