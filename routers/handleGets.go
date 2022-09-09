@@ -84,6 +84,8 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 	cal := ics.NewCalendar()
 	cal.SetMethod(ics.MethodPublish)
 	cal.SetCalscale("GREGORIAN")
+	cal.SetXWRTimezone("Europe/London")
+	cal.SetTzid("Europe/London")
 	cal.SetName("NCH Timetable")
 	cal.SetDescription("NCH Timetable")
 	cal.SetXWRCalName("NCH Timetable")
@@ -107,9 +109,9 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 		formattedDescription := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(respEv.Description, "\n", ""), "<br />", "\r\n"), "\r", "")
 
 		event := cal.AddEvent(respEv.ID)
-		event.SetStartAt(stTime.Add(-time.Hour * 1))
+		event.SetStartAt(stTime.Local())
 		event.SetDtStampTime(time.Now())
-		event.SetEndAt(endTime.Add(-time.Hour * 1))
+		event.SetEndAt(endTime.Local())
 
 		// Check is Custom 1, 2, 3 has a value
 		var urlVal string
