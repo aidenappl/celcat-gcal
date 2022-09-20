@@ -119,7 +119,7 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 		foundBracket := bracketPattern.FindString(fountTitlePTRN)
 		formattedTitle := strings.TrimSpace(fountTitle)
 
-		formattedDescription = "ClassID: " + foundBracket + "\r\n" + formattedDescription
+		formattedDescription = "ClassID: " + foundBracket + " " + formattedDescription
 
 		event := cal.AddEvent(respEv.ID)
 		event.SetStartAt(stTime.Add(-time.Hour * 1))
