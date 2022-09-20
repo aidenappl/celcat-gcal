@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strings"
 	"time"
 
@@ -111,6 +112,15 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 
 		formattedDescription := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(respEv.Description, "\n", ""), "<br />", "\r\n"), "\r", "")
 
+		pattern := regexp.MustCompile(`\([^)]*\)`)
+		bracketPattern := regexp.MustCompile(`\[[^)]*\]`)
+		fountTitlePTRN := pattern.ReplaceAllString(respEv.Modules[0], "")
+		fountTitle := bracketPattern.ReplaceAllString(fountTitlePTRN, "")
+		foundBracket := bracketPattern.FindString(fountTitlePTRN)
+		formattedTitle := strings.TrimSpace(fountTitle)
+
+		formattedDescription = "ClassID: " + foundBracket + "\r\n" + formattedDescription
+
 		event := cal.AddEvent(respEv.ID)
 		event.SetStartAt(stTime.Add(-time.Hour * 1))
 		event.SetDtStampTime(time.Now())
@@ -131,7 +141,7 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 		event.SetURL(urlVal)
 		event.SetClass("PUBLIC")
 		event.SetSequence(0)
-		event.SetSummary(respEv.Modules[0])
+		event.SetSummary(formattedTitle)
 
 		var loc string
 
