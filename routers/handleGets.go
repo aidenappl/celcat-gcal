@@ -159,7 +159,7 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 
 	dtx := []byte(serializedCal)
 
-	w.Header().Set("Content-Type", "application/octet-stream")
+	w.Header().Set("Content-Type", "text/calendar")
 	w.WriteHeader(http.StatusOK)
 	w.Write(dtx)
 
