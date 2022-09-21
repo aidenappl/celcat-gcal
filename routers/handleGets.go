@@ -148,6 +148,8 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 		event.SetDtStampTime(time.Now())
 		event.SetEndAt(endTime.Add(-time.Hour * 1))
 
+		event.SetOrganizer("Northeastern London Campus")
+
 		// Check is Custom 1, 2, 3 has a value
 		var urlVal string
 		if respEv.Custom1 != nil {
@@ -163,15 +165,23 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 		event.SetURL(urlVal)
 		event.SetClass("PUBLIC")
 		event.SetSequence(0)
+
+		formattedTitle = strings.ReplaceAll(formattedTitle, "\r", "")
+
 		event.SetSummary(formattedTitle)
 
 		if !strings.Contains(loc, "Visit - ") {
 			loc = "Devon House - " + loc
 		}
 
+		loc = strings.ReplaceAll(loc, "\r", "")
+
 		var description = "<b><i>" + title + "</i></b>\n\n<b>At: </b>" + loc + "\n<b>With: </b>" + teachers + "\n<b>Course: </b>" + strings.ReplaceAll(strings.ReplaceAll(course, "\r", ""), "\n", "") + "\n<b>Module: </b>" + formattedTitle + "\n<b>Module Code: </b>" + foundBracket
 
 		event.SetLocation(strings.ReplaceAll(loc, "Visit - ", ""))
+
+		description = strings.ReplaceAll(description, "\r", "")
+
 		event.SetDescription(description)
 	}
 
