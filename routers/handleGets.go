@@ -169,7 +169,7 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 			loc = "Devon House - " + loc
 		}
 
-		var description = "<b><i>" + title + "</i></b>\n\n<b>At: </b>" + loc + "\n<b>With: </b>" + teachers + "\n<b>Course: </b>" + course + "\n<b>Module: </b>" + formattedTitle + "\n<b>Module Code: </b>" + foundBracket
+		var description = "<b><i>" + title + "</i></b>\n\n<b>At: </b>" + loc + "\n<b>With: </b>" + teachers + "\n<b>Course: </b>" + strings.ReplaceAll(strings.ReplaceAll(course, "\r", ""), "\n", "") + "\n<b>Module: </b>" + formattedTitle + "\n<b>Module Code: </b>" + foundBracket
 
 		event.SetLocation(strings.ReplaceAll(loc, "Visit - ", ""))
 		event.SetDescription(description)
