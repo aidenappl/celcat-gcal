@@ -98,6 +98,32 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 
 	for _, respEv := range responseOb {
 
+		// Breaking down the description
+
+		splitOb := strings.Split(respEv.Description, "\r\n\r\n")
+
+		var title = ""
+		var loc = ""
+		var teachers = ""
+		var course = ""
+
+		for i, split := range splitOb {
+			dubSplit := strings.Split(split, "<br />")
+			if i == 0 {
+				title = strings.Join(dubSplit, " ")
+			}
+			if i == 2 {
+				loc = strings.Join(dubSplit, " ")
+			}
+			if i == 4 {
+				teachers = strings.Join(dubSplit, " ")
+			}
+			if i == 6 {
+				course = strings.Join(dubSplit, " ")
+			}
+
+		}
+
 		stTime, err := time.Parse(time.RFC3339, respEv.Start+"Z")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -110,8 +136,6 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		formattedDescription := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(respEv.Description, "\n", ""), "<br />", "\r\n"), "\r", "")
-
 		pattern := regexp.MustCompile(`\([^)]*\)`)
 		bracketPattern := regexp.MustCompile(`\[[^)]*\]`)
 		fountTitlePTRN := pattern.ReplaceAllString(respEv.Modules[0], "")
@@ -119,7 +143,7 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 		foundBracket := bracketPattern.FindString(fountTitlePTRN)
 		formattedTitle := strings.TrimSpace(fountTitle)
 
-		formattedDescription = "ClassID: " + foundBracket + " " + formattedDescription
+		var description = "<b>" + title + "</b>\n<b>At: </b>" + loc + "\n<b>With: </b>" + teachers + "\n<b>Course: </b>" + course + "\n<b>Module: </b>" + formattedTitle + "\n<b>Module Code: </b>" + foundBracket
 
 		event := cal.AddEvent(respEv.ID)
 		event.SetStartAt(stTime.Add(-time.Hour * 1))
@@ -143,16 +167,8 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 		event.SetSequence(0)
 		event.SetSummary(formattedTitle)
 
-		var loc string
-
-		if len(respEv.Sites) > 0 {
-			loc = respEv.Sites[0]
-		} else {
-			loc = "Northeastern London"
-		}
-
-		event.SetLocation(loc)
-		event.SetDescription(formattedDescription)
+		event.SetLocation(strings.ReplaceAll(loc, "Visit - ", ""))
+		event.SetDescription(description)
 	}
 
 	serializedCal := cal.Serialize()
