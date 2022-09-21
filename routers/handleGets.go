@@ -143,8 +143,6 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 		foundBracket := bracketPattern.FindString(fountTitlePTRN)
 		formattedTitle := strings.TrimSpace(fountTitle)
 
-		var description = "<b>" + title + "</b>\n<b>At: </b>" + loc + "\n<b>With: </b>" + teachers + "\n<b>Course: </b>" + course + "\n<b>Module: </b>" + formattedTitle + "\n<b>Module Code: </b>" + foundBracket
-
 		event := cal.AddEvent(respEv.ID)
 		event.SetStartAt(stTime.Add(-time.Hour * 1))
 		event.SetDtStampTime(time.Now())
@@ -166,6 +164,12 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 		event.SetClass("PUBLIC")
 		event.SetSequence(0)
 		event.SetSummary(formattedTitle)
+
+		if !strings.Contains(loc, "Visit - ") {
+			loc = "Devon House - " + loc
+		}
+
+		var description = "<b><i>" + title + "</i></b>\n\n<b>At: </b>" + loc + "\n<b>With: </b>" + teachers + "\n<b>Course: </b>" + course + "\n<b>Module: </b>" + formattedTitle + "\n<b>Module Code: </b>" + foundBracket
 
 		event.SetLocation(strings.ReplaceAll(loc, "Visit - ", ""))
 		event.SetDescription(description)
