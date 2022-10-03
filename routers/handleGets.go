@@ -168,6 +168,10 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 
 		formattedTitle = strings.ReplaceAll(formattedTitle, "\r", "")
 
+		if strings.Contains(formattedTitle, "Fundamentals of Computer Science") && name == "singh.ari@northeastern.edu" {
+			formattedTitle = "Fundies"
+		}
+
 		event.SetSummary(formattedTitle)
 
 		if !strings.Contains(loc, "Visit - ") {
