@@ -168,8 +168,16 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 
 		formattedTitle = strings.ReplaceAll(formattedTitle, "\r", "")
 
-		if strings.Contains(formattedTitle, "Fundamentals of Computer Science") && name == "singh.ari@northeastern.edu" {
+		if strings.Contains(formattedTitle, "Fundamentals of Computer Science") && strings.Contains(loc, "212") {
+			formattedTitle = "Fundies Lab"
+		}
+
+		if strings.Contains(formattedTitle, "Fundamentals of Computer Science") {
 			formattedTitle = "Fundies"
+		}
+
+		if strings.Contains(formattedTitle, "First-Year Writing Studio") {
+			formattedTitle = "First-Year Writing"
 		}
 
 		event.SetSummary(formattedTitle)
@@ -185,6 +193,10 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 		event.SetLocation(strings.ReplaceAll(loc, "Visit - ", ""))
 
 		description = strings.ReplaceAll(description, "\r", "")
+
+		if strings.Contains(name, "singh.ari@northeastern.edu") {
+			description = loc
+		}
 
 		event.SetDescription(description)
 	}
