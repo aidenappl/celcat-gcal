@@ -144,8 +144,10 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 		formattedTitle := strings.TrimSpace(fountTitle)
 
 		event := cal.AddEvent(respEv.ID)
+		// if dst event.SetStartAt(stTime.Add(-time.Hour * 1))
 		event.SetStartAt(stTime)
 		event.SetDtStampTime(time.Now())
+		// if dst event.SetEndAt(endTime.Add(-time.Hour * 1))
 		event.SetEndAt(endTime)
 
 		event.SetOrganizer("Northeastern London Campus")
