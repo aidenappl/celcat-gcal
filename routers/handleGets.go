@@ -145,12 +145,11 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 
 		event := cal.AddEvent(respEv.ID)
 		// if dst event.SetStartAt(stTime.Add(-time.Hour * 1))
-		event.SetStartAt(stTime)
+		event.SetStartAt(stTime.In(time.Local))
 		event.SetDtStampTime(time.Now())
-		// if dst event.SetEndAt(endTime.Add(-time.Hour * 1))
-		event.SetEndAt(endTime)
+		event.SetEndAt(endTime.In(time.Local))
 
-		event.SetOrganizer("Northeastern London Campus")
+		event.SetOrganizer("Northeastern London")
 
 		// Check is Custom 1, 2, 3 has a value
 		var urlVal string

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/aidenappl/celcat-gcal/routers"
 	"github.com/gorilla/handlers"
@@ -11,6 +12,10 @@ import (
 )
 
 func main() {
+
+	// Set used Timezone
+	os.Setenv("TZ", "Europe/London")
+
 	r := mux.NewRouter()
 
 	// AWS Healthcheck Handler
