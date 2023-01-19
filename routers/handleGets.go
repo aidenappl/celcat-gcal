@@ -3,6 +3,7 @@ package routers
 import (
 	"encoding/json"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -205,6 +206,9 @@ func HandleGetCalendar(w http.ResponseWriter, r *http.Request) {
 	serializedCal := cal.Serialize()
 
 	dtx := []byte(serializedCal)
+
+	// output into a file
+	ioutil.WriteFile("test.ics", dtx, 0644)
 
 	w.Header().Set("Content-Type", "text/calendar")
 	w.WriteHeader(http.StatusOK)
